@@ -30,28 +30,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9FC82D5B2E5EB91F001561F0"
-               BuildableName = "EPUBQuickLookHostTests.xctest"
-               BlueprintName = "EPUBQuickLookHostTests"
-               ReferencedContainer = "container:EPUBQuickLookHost.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9FC82D652E5EB91F001561F0"
-               BuildableName = "EPUBQuickLookHostUITests.xctest"
-               BlueprintName = "EPUBQuickLookHostUITests"
-               ReferencedContainer = "container:EPUBQuickLookHost.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
