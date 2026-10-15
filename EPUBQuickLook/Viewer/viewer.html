@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EPUB</title>
+<link rel="stylesheet" href="viewer.css">
+</head>
+<body>
+<header id="bar" role="toolbar" aria-label="Reader controls">
+  <button id="btoc" type="button" aria-label="Table of contents (T)" aria-expanded="false" title="Contents (T)">☰</button>
+  <div id="where" aria-live="polite"></div>
+  <span id="pct"></span>
+  <button id="bsmall" type="button" aria-label="Smaller text (−)" title="Smaller text (−)">A−</button>
+  <button id="bbig" type="button" aria-label="Larger text (+)" title="Larger text (+)">A+</button>
+  <button id="bwide" type="button" aria-label="Page width (W)" title="Page width (W)">⇔</button>
+  <button id="btheme" type="button" aria-label="Theme: light, sepia, dark (D)" title="Theme (D)">◐</button>
+  <div id="progress" aria-hidden="true"></div>
+</header>
+<nav id="side" aria-label="Table of contents"></nav>
+<main id="main"></main>
+<div id="msg" hidden></div>
+<script src="viewer.js"></script>
+</body>
+</html>
