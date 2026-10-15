@@ -2,6 +2,8 @@
 
 A macOS Quick Look extension that previews `.epub` books in Finder. Select a book and press **Space**.
 
+> Fork of [arytek/epub-quicklook-extension](https://github.com/arytek/epub-quicklook-extension) with a rewritten rendering engine (2.0); see the [changelog](CHANGELOG.md).
+
 ![Previewing "A First Course in Linear Algebra" (GFDL) with the table of contents open](docs/screenshot.png)
 
 ## Features
@@ -38,7 +40,7 @@ macOS 12 or later.
 Requires [Xcode](https://apps.apple.com/app/xcode/id497799835).
 
 ```bash
-git clone https://github.com/arytek/epub-quicklook-extension.git
+git clone https://github.com/cowkoi/epub-quicklook-extension.git
 cd epub-quicklook-extension
 ./scripts/install.sh
 ```
@@ -49,7 +51,7 @@ account in Xcode is enough) and ad hoc otherwise, copies `EPUBQuickLookHost.app`
 
 ### Prebuilt app
 
-Each CI run uploads an unsigned build as an artifact. Because it isn't notarized, macOS
+Each [CI run](../../actions/workflows/ci.yml) uploads an unsigned build as an artifact (`EPUBQuickLookHost.zip`). Because it isn't notarized, macOS
 will refuse to open it until you clear the quarantine flag:
 
 ```bash
