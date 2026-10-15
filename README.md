@@ -35,7 +35,18 @@ macOS 12 or later.
 
 ## Install
 
-### Build from source (recommended)
+### Download
+
+1. Get the `.dmg` from the [latest release](../../releases/latest), open it, and drag
+   **EPUBQuickLookHost** into **Applications**.
+2. The build isn't notarized by Apple, so macOS blocks it until you clear the download
+   quarantine once:
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/EPUBQuickLookHost.app
+   ```
+3. Open **EPUBQuickLookHost** once. Then select an `.epub` in Finder and press **Space**.
+
+### Build from source
 
 Requires [Xcode](https://apps.apple.com/app/xcode/id497799835).
 
@@ -48,17 +59,6 @@ cd epub-quicklook-extension
 The script signs with your Apple Development certificate if you have one (a free Apple ID
 account in Xcode is enough) and ad hoc otherwise, copies `EPUBQuickLookHost.app` to
 `/Applications`, and registers the extension.
-
-### Prebuilt app
-
-Each [CI run](../../actions/workflows/ci.yml) uploads an unsigned build as an artifact (`EPUBQuickLookHost.zip`). Because it isn't notarized, macOS
-will refuse to open it until you clear the quarantine flag:
-
-```bash
-xattr -dr com.apple.quarantine /Applications/EPUBQuickLookHost.app
-```
-
-Then open the app once.
 
 ## Troubleshooting
 

@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Test
+        run: swift test
+
+      - name: Build (ad-hoc signed)
+        run: |
+          xcodebuild -project EPUBQuickLookHost.xcodeproj -scheme EPUBQuickLookHost \
+            -configuration Release -derivedDataPath build \
+            CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM= \
+            build
+          codesign --verify --deep --strict build/Build/Products/Release/EPUBQuickLookHost.app
+
+      - name: Package DMG and ZIP
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          APP=build/Build/Products/Release/EPUBQuickLookHost.app
+          mkdir -p dist dmg
+          cp -R "$APP" dmg/
+          ln -s /Applications dmg/Applications
+          hdiutil create -volname "EPUB Quick Look $VERSION" -srcfolder dmg -ov -format UDZO \
+            "dist/EPUBQuickLook-$VERSION.dmg"
+          ditto -c -k --keepParent "$APP" "dist/EPUBQuickLook-$VERSION.zip"
+          cd dist && shasum -a 256 * > SHA256SUMS.txt && cat SHA256SUMS.txt
+
+      - name: Release notes from CHANGELOG
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk -v v="$VERSION" '
+            $0 ~ "^## " v " " {on=1; next}
+            on && /^## / {exit}
+            on {print}
+          ' CHANGELOG.md > notes.md
+          cat >> notes.md <<'EOF'
+
+          ---
+          ### Install
+          1. Download the `.dmg`, open it, and drag **EPUBQuickLookHost** into **Applications**.
+          2. This build isn't notarized by Apple, so clear the download quarantine once in Terminal:
+             ```bash
+             xattr -dr com.apple.quarantine /Applications/EPUBQuickLookHost.app
+             ```
+          3. Open **EPUBQuickLookHost** once, then select an `.epub` in Finder and press **Space**.
+
+          Prefer building it yourself? `git clone` this repo and run `./scripts/install.sh`.
+          EOF
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --title "EPUB Quick Look ${GITHUB_REF_NAME#v}" --notes-file notes.md

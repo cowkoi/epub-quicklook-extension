@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 — Unreleased
+## 2.0.0 — 2026-10-15
 
 Rewrite of the preview engine for calibre-like fidelity and speed.
 
