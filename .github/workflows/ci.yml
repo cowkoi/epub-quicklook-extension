@@ -14,7 +14,7 @@ jobs:
     name: Unit tests + sample corpus
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Download IDPF EPUB 3 samples
         env:
@@ -36,7 +36,7 @@ jobs:
     name: Build app (unsigned)
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: xcodebuild
         run: |
           xcodebuild -project EPUBQuickLookHost.xcodeproj -scheme EPUBQuickLookHost \
@@ -47,7 +47,7 @@ jobs:
         run: |
           cd build/Build/Products/Release
           ditto -c -k --keepParent EPUBQuickLookHost.app EPUBQuickLookHost.zip
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: EPUBQuickLookHost
           path: build/Build/Products/Release/EPUBQuickLookHost.zip
