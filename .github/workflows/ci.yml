@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Unit tests + sample corpus
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download IDPF EPUB 3 samples
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p corpus
+          gh release download 20230704 -R IDPF/epub3-samples -D corpus -p '*.epub'
+          ls corpus | wc -l
+
+      - name: swift test
+        env:
+          EPUB_CORPUS: ${{ github.workspace }}/corpus
+        run: swift test
+
+      - name: Check viewer.js syntax
+        run: node --check EPUBQuickLook/Viewer/viewer.js
+
+  build:
+    name: Build app (unsigned)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: xcodebuild
+        run: |
+          xcodebuild -project EPUBQuickLookHost.xcodeproj -scheme EPUBQuickLookHost \
+            -configuration Release -derivedDataPath build \
+            CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM= \
+            build
+      - name: Package
+        run: |
+          cd build/Build/Products/Release
+          ditto -c -k --keepParent EPUBQuickLookHost.app EPUBQuickLookHost.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EPUBQuickLookHost
+          path: build/Build/Products/Release/EPUBQuickLookHost.zip
